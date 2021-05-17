@@ -12,8 +12,8 @@
 
                 animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, function (component){
                     let tags = component.getTags();
-                    let duration;
-                    let dur = [];
+                    let timerDur;
+                    let timerDuration = [];
                     let extraText = "", endText = "";
                     let easingTime = "swing";
                     let clock = false;
@@ -21,9 +21,9 @@
                     let n = null;
 
                     _.forEach(tags, function(value, key){
-                        if(value.indexOf("dur:") > -1){
-                            duration = value.slice(4, value.length);
-                            dur = duration.split(",");
+                        if(value.indexOf("time:") > -1){
+                            timerDur = value.slice(5, value.length);
+                            timerDuration = timerDur.split(",");
                         }
                         if(value.indexOf("extra-text:") > -1){
                             extraText = value.slice(11, value.length);
@@ -42,25 +42,25 @@
 
                     //check if clock may require changing 'easing'
                     if(clock==true){
-                        if((dur[0]/1000) == dur[1] || (dur[0]/1000) == dur[2]){
+                        if((timerDuration[0]/1000) == timerDuration[1] || (timerDuration[0]/1000) == timerDuration[2]){
                             easingTime = "linear";
                         }
                     }
-                    //check if 'dur' has at least 3 elements in Array 
-                    if(dur.length < 3){
-                        console.warn("'duration' tag is incomplete");
+                    //check if 'timerDuration' has at least 3 elements in Array 
+                    if(timerDuration.length < 3){
+                        console.warn("'time' tag is incomplete");
                         return;
                     }
                     //set initial number to count from
-                    component.setText(dur[1]);
+                    component.setText(timerDuration[1]);
 
                     //counter
                     $({ countNum: component.getText() }).animate(
                         {
-                            countNum: parseInt(dur[2])
+                            countNum: parseInt(timerDuration[2])
                         },
                         {
-                            duration: parseInt(dur[0]),
+                            duration: parseInt(timerDuration[0]),
                             easing: easingTime,
                             step: function() {
                                 let numbers = Math.round(this.countNum);
@@ -69,7 +69,7 @@
                                     nums = clockk(numbers, nums);
                                 }
                                 component.setText(nums + extraText);
-                                if(numbers == parseInt(dur[2]) && endText != ""){
+                                if(numbers == parseInt(timerDuration[2]) && endText != ""){
                                     component.setText(nums + endText);
                                 }
                             },
