@@ -18,7 +18,7 @@
                     if(keyframes.length >1){
                         animDelay = (animDuration*keyframes[1].offset);
                     }
-                    console.log(animDelay);
+                    console.log(textObject,keyframes,animDuration, animDelay);
 
                     let tags = component.getTags();
                     let timerDur;
