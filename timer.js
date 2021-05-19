@@ -11,7 +11,8 @@
                 let animatedNumbers = experience.findComponentsByTag("timer");
                 console.log(animatedNumbers);
 
-                animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, function (component){
+                animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, function(component){
+                    console.log(this);
                     let tags = component.getTags();
                     let timerDur;
                     let timerDuration = [];
