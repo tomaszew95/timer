@@ -9,6 +9,7 @@
         CerosSDK.findExperience()
             .done(function(experience) { 
                 let animatedNumbers = experience.findComponentsByTag("timer");
+                console.log(animatedNumbers);
 
                 animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, function (component){
                     let tags = component.getTags();
