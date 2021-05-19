@@ -18,7 +18,7 @@
                     if(keyframes.length >1){
                         animDelay = (animDuration*keyframes[1].offset);
                     }
-                    console.log(getComputedStyle(textObject).animationDuration, getComputedStyle(textObject).animationDuration[0]);
+                    console.log(parseFloat(getComputedStyle(textObject).animationDuration), getComputedStyle(textObject).animationDuration[0]);
 
                     let tags = component.getTags();
                     let timerDur;
