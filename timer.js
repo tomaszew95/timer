@@ -9,10 +9,17 @@
         CerosSDK.findExperience()
             .done(function(experience) { 
                 let animatedNumbers = experience.findComponentsByTag("timer");
-                console.log(animatedNumbers, CerosSDK);
 
                 animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, (component) => {
-                    console.log(this);
+                    let textObject = document.getElementById(component.id);
+                    let keyframes = textObject.getAnimations()[0].effect.getKeyframes();
+                    let animDuration = parseFloat(textObject.style.getPropertyValue("animation-duration"));
+                    let animDelay;
+                    if(keyframes.length >1){
+                        animDelay = (animDuration*keyframes[1].offset);
+                    }
+                    console.log(animDelay);
+
                     let tags = component.getTags();
                     let timerDur;
                     let timerDuration = [];
@@ -57,7 +64,7 @@
                     component.setText(timerDuration[1]);
 
                     //counter
-                    $({ countNum: component.getText() }).animate(
+                    $({ countNum: component.getText() }).delay(animDelay).animate(
                         {
                             countNum: parseInt(timerDuration[2])
                         },
