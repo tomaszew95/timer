@@ -13,12 +13,12 @@
                 animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, (component) => {
                     let textObject = document.getElementById(component.id);
                     let keyframes = textObject.getAnimations()[0].effect.getKeyframes();
-                    let animDuration = parseFloat(textObject.style.getPropertyValue("animation-duration")[0]);
+                    let animDuration = parseFloat(getComputedStyle(textObject).animationDuration);
                     let animDelay;
                     if(keyframes.length >1){
-                        animDelay = (animDuration*keyframes[1].offset);
+                        animDelay = (animDuration*1000*keyframes[1].offset);
                     }
-                    console.log(parseFloat(getComputedStyle(textObject).animationDuration), getComputedStyle(textObject).animationDuration[0]);
+                    console.log(animDelay);
 
                     let tags = component.getTags();
                     let timerDur;
