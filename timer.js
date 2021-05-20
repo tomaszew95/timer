@@ -8,10 +8,10 @@
     require(['CerosSDK'], function (CerosSDK) {
         CerosSDK.findExperience()
             .done(function(experience) { 
-                let animatedNumbers = experience.findComponentsByTag("timer");
+                var animatedNumbers = experience.findComponentsByTag("timer");
 
-                animatedNumbers.on(CerosSDK.EVENTS.SHOWN, (component) => {
-                    console.log(component);
+                animatedNumbers.on(CerosSDK.EVENTS.SHOWN, function(component) {
+                    console.log(component, this);
                     //checking and setting delay
                     let textObject = document.getElementById(component.id);
                     let keyframes = textObject.getAnimations()[0].effect.getKeyframes();
