@@ -8,7 +8,7 @@
     require(['CerosSDK'], function (CerosSDK) {
         CerosSDK.findExperience()
             .done(function(experience) { 
-                var animatedNumbers = experience.findComponentsByTag("timer-two");
+                var animatedNumbers = experience.findComponentsByTag("timer").layers;
 
                 animatedNumbers.on(CerosSDK.EVENTS.SHOWN, (component) => {
                     console.log(component);
