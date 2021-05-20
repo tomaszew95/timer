@@ -31,8 +31,8 @@
                     })
                     animatedNumber.on(CerosSDK.EVENTS.SHOWN, layerShownCallback);
                     animatedNumber.on(CerosSDK.EVENTS.HIDDEN, layerHiddenCallback);
-                    animatedNumLayers.on(CerosSDK.EVENTS.ANIMATION_STARTED, animationStartedCallback);
                 }
+                animatedNumLayers.on(CerosSDK.EVENTS.ANIMATION_STARTED, animationStartedCallback);
             })
     });
 })();
