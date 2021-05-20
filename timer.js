@@ -10,7 +10,7 @@
             .done(function(experience) { 
                 let animatedNumbers = experience.findComponentsByTag("timer");
 
-                animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, (component) => {
+                animatedNumbers.on(CerosSDK.EVENTS.SHOWN, (component) => {
                     console.log(component);
                     //checking and setting delay
                     let textObject = document.getElementById(component.id);
