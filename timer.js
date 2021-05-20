@@ -9,8 +9,9 @@
         CerosSDK.findExperience()
             .done(function(experience) { 
                 var animatedNumbers = experience.findComponentsByTag("timer");
-                var layerShownCallback = function(component) {
-                    console.log(component, this);
+
+                animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, (component) => {
+                    console.log(component);
                     //checking and setting delay
                     let textObject = document.getElementById(component.id);
                     let keyframes = textObject.getAnimations()[0].effect.getKeyframes();
@@ -100,9 +101,7 @@
                             }
                         }
                     );
-                }
-
-                animatedNumbers.on(CerosSDK.EVENTS.SHOWN, layerShownCallback);
+                });
             })
     });
 })();
