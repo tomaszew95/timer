@@ -11,6 +11,8 @@
                 let animatedNumbers = experience.findComponentsByTag("timer");
 
                 animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, (component) => {
+                    console.log(component);
+                    //checking and setting delay
                     let textObject = document.getElementById(component.id);
                     let keyframes = textObject.getAnimations()[0].effect.getKeyframes();
                     let animDuration = parseFloat(getComputedStyle(textObject).animationDuration);
@@ -18,7 +20,6 @@
                     if(keyframes.length >1){
                         animDelay = (animDuration*1000*keyframes[1].offset);
                     }
-                    console.log(animDelay);
 
                     let tags = component.getTags();
                     let timerDur;
