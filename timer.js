@@ -8,18 +8,20 @@
     require(['CerosSDK'], function (CerosSDK) {
         CerosSDK.findExperience()
             .done(function(experience) { 
-                var animatedNumbers = experience.findComponentsByTag("timer").layers;
-                var triggerTimer = [];
+                var animatedNumbers = experience.findComponentsByTag("timer");
+                var animatedNumLayers = animatedNumbers.layers;
                 let source = {'allow-timer-animation':true};
                 console.log(source);
 
                 var layerShownCallback = (component) => {
                     let source = {'allow-timer-animation':true};
                     component.assign(component, source);
+                    console.log(component);
                 }
                 var layerHiddenCallback = (component) => {
                     let source = {'allow-timer-animation':false};
                     component.assign(component, source);
+                    console.log(component);
                 }
 
                 for(let i = 0; i<animatedNumbers.length;i++){
@@ -29,7 +31,7 @@
                     })
                     animatedNumber.on(CerosSDK.EVENTS.SHOWN, layerShownCallback);
                     animatedNumber.on(CerosSDK.EVENTS.HIDDEN, layerHiddenCallback);
-                    animatedNumber.on(CerosSDK.EVENTS.ANIMATION_STARTED, animationStartedCallback);
+                    animatedNumLayers.on(CerosSDK.EVENTS.ANIMATION_STARTED, animationStartedCallback);
                 }
             })
     });
