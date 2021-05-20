@@ -102,9 +102,13 @@
                         }
                     );
                 }
+                var hiddenn = (layer) => {
+                    console.log(layer);
+                }
 
                 for(let animatedNumber of animatedNumbers){
                     animatedNumber.on(CerosSDK.EVENTS.SHOWN, layerShownCallback);
+                    animatedNumber.on(CerosSDK.EVENTS.HIDDEN, hiddenn);
                 }
             })
     });
