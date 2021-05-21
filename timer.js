@@ -10,20 +10,15 @@
             .done(function(experience) { 
                 var animatedNumbers = experience.findComponentsByTag("timer");
                 var animatedNumLayers = animatedNumbers.layers;
-                let source = {'allow-timer-animation':true};
 
                 var layerShownCallback = (component) => {
                     let animatedNumLayer = document.getElementById(component.id);
-                    // source = {'allow-timer-animation':true};
-                    animatedNumLayer.setAttribute('allow-timer-animation', 'false');
-                    console.log(component.getAttribute('allow-timer-animation'));
+                    animatedNumLayer.setAttribute('allow-timer-animation', 'no');
                 }
                 var layerHiddenCallback = (component) => {
                     let animatedNumLayer = document.getElementById(component.id);
-                    // source = {'allow-timer-animation':false};
-                    animatedNumLayer.setAttribute('allow-timer-animation', 'true');
+                    animatedNumLayer.setAttribute('allow-timer-animation', 'yes');
                 }
-
                 for(let i = 0; i<animatedNumLayers.length;i++){
                     animatedNumLayers[i].on(CerosSDK.EVENTS.SHOWN, layerShownCallback);
                     animatedNumLayers[i].on(CerosSDK.EVENTS.HIDDEN, layerHiddenCallback);
@@ -32,12 +27,10 @@
                 var animationStartedCallback = (component) => {
                     let textObject = document.getElementById(component.id);
                     if(textObject.getAttribute('allow-timer-animation') ==null){
-                        textObject.setAttribute('allow-timer-animation', 'true');
+                        textObject.setAttribute('allow-timer-animation', 'yes');
                     }
-                    console.log(component,textObject.getAttribute('allow-timer-animation'));
                 
-                    if(textObject.getAttribute('allow-timer-animation')=='true'){
-                        console.log("works");
+                    if(textObject.getAttribute('allow-timer-animation')=='yes'){
                         //checking and setting delay
                         let keyframes = textObject.getAnimations()[0].effect.getKeyframes();
                         let animDuration = parseFloat(getComputedStyle(textObject).animationDuration);
@@ -127,7 +120,6 @@
                         );
                     }
                 }
-
                 animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, animationStartedCallback);
             })
     });
