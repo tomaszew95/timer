@@ -15,13 +15,13 @@
                 var layerShownCallback = (component) => {
                     let animatedNumLayer = document.getElementById(component.id);
                     // source = {'allow-timer-animation':true};
-                    animatedNumLayer.setAttribute('allow-timer-animation', false);
+                    animatedNumLayer.setAttribute('allow-timer-animation', 'false');
                     console.log(component.getAttribute('allow-timer-animation'));
                 }
                 var layerHiddenCallback = (component) => {
                     let animatedNumLayer = document.getElementById(component.id);
                     // source = {'allow-timer-animation':false};
-                    animatedNumLayer.setAttribute('allow-timer-animation', true);
+                    animatedNumLayer.setAttribute('allow-timer-animation', 'true');
                 }
 
                 for(let i = 0; i<animatedNumLayers.length;i++){
@@ -32,11 +32,12 @@
                 var animationStartedCallback = (component) => {
                     let textObject = document.getElementById(component.id);
                     if(textObject.getAttribute('allow-timer-animation') ==null){
-                        textObject.setAttribute('allow-timer-animation', true);
+                        textObject.setAttribute('allow-timer-animation', 'true');
                     }
                     console.log(component,textObject.getAttribute('allow-timer-animation'));
                 
-                    if(textObject.getAttribute('allow-timer-animation')==true){
+                    if(textObject.getAttribute('allow-timer-animation')=='true'){
+                        console.log("works");
                         //checking and setting delay
                         let keyframes = textObject.getAnimations()[0].effect.getKeyframes();
                         let animDuration = parseFloat(getComputedStyle(textObject).animationDuration);
