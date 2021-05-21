@@ -35,7 +35,7 @@
 
                 var animationStartedCallback = (component) => {
                     let textObject = document.getElementById(component.id);
-                    console.log(textObject.getAttribute('allow-timer-animation'));
+                    console.log(component,textObject.getAttribute('allow-timer-animation'));
                 
                     if(textObject.getAttribute('allow-timer-animation')==true){
                         //checking and setting delay
