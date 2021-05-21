@@ -13,22 +13,19 @@
                 let source = {'allow-timer-animation':true};
 
                 var layerShownCallback = (component) => {
-                    source = {'allow-timer-animation':true};
-                    component.assign(component, source);
+                    let animatedNumLayer = document.getElementById(component.id);
+                    // source = {'allow-timer-animation':true};
+                    animatedNumLayer.setAttribute('allow-timer-animation', 'true');
                     console.log(component);
                 }
                 var layerHiddenCallback = (component) => {
-                    source = {'allow-timer-animation':false};
-                    component.assign(component, source);
+                    let animatedNumLayer = document.getElementById(component.id);
+                    // source = {'allow-timer-animation':false};
+                    animatedNumLayer.setAttribute('allow-timer-animation', 'false');
                     console.log(component);
                 }
 
                 for(let i = 0; i<animatedNumLayers.length;i++){
-                    animatedNumLayers[i].defineProperty({}, 'allow-timer-animation',{
-                        value: true,
-                        writable: true
-                    })
-                    console.log(animatedNumLayers[i]);
                     animatedNumLayers[i].on(CerosSDK.EVENTS.SHOWN, layerShownCallback);
                     animatedNumLayers[i].on(CerosSDK.EVENTS.HIDDEN, layerHiddenCallback);
                 }
