@@ -23,14 +23,14 @@
                     console.log(component);
                 }
 
-                for(let i = 0; i<animatedNumbers.length;i++){
-                    animatedNumbers[i].defineProperty({}, 'allow-timer-animation',{
+                for(let i = 0; i<animatedNumLayers.length;i++){
+                    animatedNumLayers[i].defineProperty({}, 'allow-timer-animation',{
                         value: true,
                         writable: true
                     })
-                    console.log(animatedNumbers)
-                    animatedNumLayers.on(CerosSDK.EVENTS.SHOWN, layerShownCallback);
-                    animatedNumLayers.on(CerosSDK.EVENTS.HIDDEN, layerHiddenCallback);
+                    console.log(animatedNumLayers[i]);
+                    animatedNumLayers[i].on(CerosSDK.EVENTS.SHOWN, layerShownCallback);
+                    animatedNumLayers[i].on(CerosSDK.EVENTS.HIDDEN, layerHiddenCallback);
                 }
 
                 var animationStartedCallback = (component) => {
