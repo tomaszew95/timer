@@ -11,15 +11,14 @@
                 var animatedNumbers = experience.findComponentsByTag("timer");
                 var animatedNumLayers = animatedNumbers.layers;
                 let source = {'allow-timer-animation':true};
-                console.log(source);
 
                 var layerShownCallback = (component) => {
-                    let source = {'allow-timer-animation':true};
+                    source = {'allow-timer-animation':true};
                     component.assign(component, source);
                     console.log(component);
                 }
                 var layerHiddenCallback = (component) => {
-                    let source = {'allow-timer-animation':false};
+                    source = {'allow-timer-animation':false};
                     component.assign(component, source);
                     console.log(component);
                 }
@@ -29,13 +28,14 @@
                         value: true,
                         writable: true
                     })
+                    console.log(animatedNumbers)
                     animatedNumLayers.on(CerosSDK.EVENTS.SHOWN, layerShownCallback);
                     animatedNumLayers.on(CerosSDK.EVENTS.HIDDEN, layerHiddenCallback);
                 }
 
                 var animationStartedCallback = (component) => {
-                    console.log(component);
                     let textObject = document.getElementById(component.id);
+                    console.log(textObject.getAttribute('allow-timer-animation'));
                 
                     if(textObject.getAttribute('allow-timer-animation')==true){
                         //checking and setting delay
