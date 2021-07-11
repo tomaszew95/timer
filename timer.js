@@ -38,12 +38,20 @@
                         if(keyframes.length >1){
                             animDelay = (animDuration*1000*keyframes[1].offset);
                         }
+                        let test = {
+                            keyframes:keyframes,
+                            animDuration:animDuration,
+                            animDelay:animDelay
+                        }
+                        console.log(test);
+
                         let tags = component.getTags();
                         let timerDur;
                         let timerDuration = [];
                         let extraText = "", endText = "";
                         let easingTime = "swing";
                         let clock = false;
+                        let colon = ':';
                         let fraction = 1;
                         let n = null;
                 
@@ -60,6 +68,10 @@
                             }
                             if(value.indexOf("clock") > -1){
                                 clock = true;
+                                if(value.indexOf("colon:") > -1){
+                                    colon = value.slice(6,value.length);
+                                    colon.replaceAll("%20"," ");
+                                }
                             }
                             if(value.indexOf("fraction:") > -1){
                                 n = parseInt(value.slice(9, value.length))
@@ -93,7 +105,7 @@
                                     let numbers = Math.round(this.countNum);
                                     let nums = ((numbers/fraction).toFixed(n)).toString();
                                     if(clock === true){
-                                        nums = clockk(numbers, nums);
+                                        nums = clockFunction(numbers, nums, colon);
                                     }
                                     component.setText(nums + extraText);
                                     if(numbers == parseInt(timerDuration[2]) && endText != ""){
@@ -104,7 +116,7 @@
                                     let numbers = this.countNum;
                                     let nums = ((numbers/fraction).toFixed(n)).toString();
                                     if(clock === true){
-                                        nums = clockk(numbers, nums);
+                                        nums = clockFunction(numbers, nums, colon);
                                     }
                                     if(endText != ""){
                                         component.setText(nums + endText);
@@ -125,11 +137,15 @@
     });
 })();
 
-var clockk = (number,num) => {
-    let sec = (number % 60);
-    if(sec < 10){
-        sec = "0" + (number % 60);
+var clockFunction = (number,num, colon) => {
+    let secs = (number % 60);
+    if(secs < 10){
+        secs = "0" + (number % 60);
     }
-    num = (Math.floor(number/60) + " " + sec).toString();
+    let mins = Math.floor(number/60);
+    if(mins < 10){
+        mins = "0" + Math.floor(number/60);
+    }
+    num = (mins + colon + secs).toString();
     return num;
 }
