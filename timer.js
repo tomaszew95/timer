@@ -64,8 +64,8 @@
                                 clock = true;
                             }
                             if((value.indexOf("colon:") > -1) && clock==true){
-                                colon = value.slice(6,value.length).toString();
-                                console.log(value.slice(6,value.length).toString());
+                                colon = "'" +  value.slice(6,value.length) + "'";
+                                console.log("'" +  value.slice(6,value.length) + "'");
                                 colon.replaceAll("%20"," ");
                                 console.log(colon);
                             }
