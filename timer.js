@@ -38,12 +38,6 @@
                         if(keyframes.length>2){
                             animDelay = (animDuration*1000*keyframes[1].offset);
                         }
-                        let test = {
-                            keyframes:keyframes,
-                            animDuration:animDuration,
-                            animDelay:animDelay
-                        }
-                        console.log(test);
 
                         let tags = component.getTags();
                         let timerDur;
@@ -68,10 +62,10 @@
                             }
                             if(value.indexOf("clock") > -1){
                                 clock = true;
-                                if(value.indexOf("colon:") > -1){
-                                    colon = value.slice(6,value.length);
-                                    colon.replaceAll("%20"," ");
-                                }
+                            }
+                            if((value.indexOf("colon:") > -1) && clock==true){
+                                colon = value.slice(6,value.length);
+                                colon.replaceAll("%20"," ");
                             }
                             if(value.indexOf("fraction:") > -1){
                                 n = parseInt(value.slice(9, value.length))
