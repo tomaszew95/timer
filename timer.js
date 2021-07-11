@@ -65,7 +65,9 @@
                             }
                             if((value.indexOf("colon:") > -1) && clock==true){
                                 colon = value.slice(6,value.length);
+                                console.log(value.slice(6,value.length));
                                 colon.replaceAll("%20"," ");
+                                console.log(colon);
                             }
                             if(value.indexOf("fraction:") > -1){
                                 n = parseInt(value.slice(9, value.length))
