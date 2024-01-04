@@ -84,6 +84,7 @@ var timerPlugin = document.getElementById("ceros-timer-plugin");
                             txt.innerText = num + extraText.value
                             return num
                         }
+                        let initialNumber = getNumber(timer[1])
                         $({ countNumber: timer[1] }).delay(animDelay).animate(
                             {
                                 countNumber: timer[2]
@@ -91,6 +92,9 @@ var timerPlugin = document.getElementById("ceros-timer-plugin");
                             {
                                 duration: timer[0],
                                 easing: easingTime,
+                                start: function(){
+                                    txt.innerText = initialNumber
+                                },
                                 step: function(){
                                     let number = getNumber(this.countNumber)
                                     if(this.countNumber == timer[2] && endText.value != "")
