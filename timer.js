@@ -1,145 +1,117 @@
-(function() {
+(function () {
     "use strict";
     require.config({
         paths: {
-            CerosSDK: '//sdk.ceros.com/standalone-player-sdk-v5.min'
-        }
+            CerosSDK: "//sdk.ceros.com/standalone-player-sdk-v5.min",
+        },
     });
-    require(['CerosSDK'], function (CerosSDK) {
+    require(["CerosSDK"], function (CerosSDK) {
         CerosSDK.findExperience()
-            .done(function(experience) { 
-                var animatedNumbers = experience.findComponentsByTag("timer");
-                var animatedNumLayers = animatedNumbers.layers;
+            .fail(function (error) {
+                console.error(error);
+            })
+            .done(function (experience) {
+                let animatedNumbers = experience.findComponentsByTag("timer");
 
-                var layerShownCallback = (component) => {
-                    let animatedNumLayer = document.getElementById(component.id);
-                    animatedNumLayer.setAttribute('allow-timer-animation', 'no');
-                }
-                var layerHiddenCallback = (component) => {
-                    let animatedNumLayer = document.getElementById(component.id);
-                    animatedNumLayer.setAttribute('allow-timer-animation', 'yes');
-                }
-                for(let i = 0; i<animatedNumLayers.length;i++){
-                    animatedNumLayers[i].on(CerosSDK.EVENTS.SHOWN, layerShownCallback);
-                    animatedNumLayers[i].on(CerosSDK.EVENTS.HIDDEN, layerHiddenCallback);
-                }
+                const animationToggleCallback = (anim, bool) => document.getElementById(anim.id).setAttribute("allow-timer-animation", bool);
+                animatedNumbers.on(CerosSDK.EVENTS.SHOWN, function (animated) {
+                    animationToggleCallback(animated, "no");
+                });
+                animatedNumbers.on(CerosSDK.EVENTS.HIDDEN, function (animated) {
+                    animationToggleCallback(animated, "yes");
+                });
 
-                var animationStartedCallback = (component) => {
-                    let textObject = document.getElementById(component.id);
-                    if(textObject.getAttribute('allow-timer-animation') ==null){
-                        textObject.setAttribute('allow-timer-animation', 'yes');
-                    }
-                
-                    if(textObject.getAttribute('allow-timer-animation')=='yes'){
-                        //checking and setting delay
-                        let keyframes = textObject.getAnimations()[0].effect.getKeyframes();
-                        let animDuration = parseFloat(getComputedStyle(textObject).animationDuration);
-                        let animDelay = 0;
-                        if(keyframes.length>2){
-                            animDelay = (animDuration*1000*keyframes[1].offset);
+                const animationStartedCallback = (a) => {
+                    let textBox = document.getElementById(a.id);
+                    if (textBox.getAttribute("allow-timer-animation") == null) textBox.setAttribute("allow-timer-animation", "yes");
+
+                    if (textBox.getAttribute("allow-timer-animation") == "yes") {
+                        // checking and setting delay
+                        let keyframes = textBox.getAnimations()[0].effect.getKeyframes();
+                        let animDuration = parseFloat(getComputedStyle(textBox).animationDuration);
+                        let animDelay = keyframes.length > 2 ? animDuration * 1000 * keyframes[1].offset : 0;
+
+                        // checking for specific tags
+                        let tags = a.getTags();
+                        let arr = [];
+                        class TagToObject {
+                            constructor(name, value) {
+                                this.name = `${name}:`;
+                                this.value = value;
+                                arr.push(this);
+                            }
                         }
-
-                        let tags = component.getTags();
-                        let timerDur;
-                        let timerDuration = [];
-                        let extraText = "", endText = "";
+                        let time = new TagToObject("time", null);
+                        let extraText = new TagToObject("extra-text", "");
+                        let endText = new TagToObject("end-text", "");
+                        let fraction = new TagToObject("fraction", 0);
+                        let colon = new TagToObject("colon", ":");
+                        // ---
+                        for (let tag of tags) {
+                            for (let ar of arr) {
+                                if (tag.includes(ar.name)) ar.value = tag.slice(ar.name.length, tag.length);
+                            }
+                        }
+                        let timer = time.value.split(",");
+                        timer = timer.map((t) => parseInt(t, 10));
+                        let fra = parseInt(fraction.value, 10);
+                        let clock = tags.includes("clock");
+                        let col = colon.value.replaceAll("%20", " ");
                         let easingTime = "swing";
-                        let clock = false;
-                        let colon = ':';
-                        let fraction = 1;
-                        let n = null;
-                
-                        _.forEach(tags, function(value, key){
-                            if(value.indexOf("time:") > -1){
-                                timerDur = value.slice(5, value.length);
-                                timerDuration = timerDur.split(",");
-                            }
-                            if(value.indexOf("extra-text:") > -1){
-                                extraText = value.slice(11, value.length);
-                            }
-                            if(value.indexOf("end-text:") > -1){
-                                endText = value.slice(9, value.length);
-                            }
-                            if(value.indexOf("clock") > -1){
-                                clock = true;
-                            }
-                            if((value.indexOf("colon:") > -1) && clock==true){
-                                let c = value.slice(6,value.length);
-                                colon = c.replaceAll("%20"," ");
-                            }
-                            if(value.indexOf("fraction:") > -1){
-                                n = parseInt(value.slice(9, value.length))
-                                fraction = 10**n;
-                            }
-                        })
-                
-                        //check if clock may require changing 'easing'
-                        if(clock==true){
-                            if((timerDuration[0]/1000) == timerDuration[1] || (timerDuration[0]/1000) == timerDuration[2]){
-                                easingTime = "linear";
-                            }
-                        }
-                        //check if 'timerDuration' has at least 3 elements in Array 
-                        if(timerDuration.length < 3){
+
+                        // checking if "timer" has at least 3 values
+                        if (timer.length < 3) {
                             console.warn("'time' tag is incomplete");
                             return;
                         }
-                        //set initial number to count from
-                        component.setText(timerDuration[1]);
-                
-                        //counter
-                        $({ countNum: component.getText() }).delay(animDelay).animate(
-                            {
-                                countNum: parseInt(timerDuration[2])
-                            },
-                            {
-                                duration: parseInt(timerDuration[0]),
-                                easing: easingTime,
-                                step: function() {
-                                    let numbers = Math.round(this.countNum);
-                                    let nums = ((numbers/fraction).toFixed(n)).toString();
-                                    if(clock === true){
-                                        nums = clockFunction(numbers, nums, colon);
-                                    }
-                                    component.setText(nums + extraText);
-                                    if(numbers == parseInt(timerDuration[2]) && endText != ""){
-                                        component.setText(nums + endText);
-                                    }
+
+                        // checking if clock may require changing type of easing
+                        if (clock) {
+                            let duration = parseInt(timer[0] / 1000, 10);
+                            if (duration == timer[1] || duration == timer[2]) easingTime = "linear";
+                        }
+
+                        // setting initial number to count from
+                        let txt = textBox.querySelector("span") ?? textBox.querySelector("p");
+                        txt.innerText = timer[1];
+
+                        // counter
+                        const getNumber = (countNum) => {
+                            let num = (countNum / 10 ** fra).toFixed(fra);
+                            num = num.toString();
+                            if (clock) num = clockFunction(countNum, num, col);
+                            txt.innerText = num + extraText.value;
+                            return num;
+                        };
+                        $({ countNumber: timer[1] })
+                            .delay(animDelay)
+                            .animate(
+                                {
+                                    countNumber: timer[2],
                                 },
-                                complete: function() {
-                                    let numbers = this.countNum;
-                                    let nums = ((numbers/fraction).toFixed(n)).toString();
-                                    if(clock === true){
-                                        nums = clockFunction(numbers, nums, colon);
-                                    }
-                                    if(endText != ""){
-                                        component.setText(nums + endText);
-                                    }
-                                    else if(extraText != ""){
-                                        component.setText(nums + extraText);
-                                    }
-                                    else{
-                                        component.setText(nums);
-                                    }
+                                {
+                                    duration: timer[0],
+                                    easing: easingTime,
+                                    step: function () {
+                                        let number = getNumber(this.countNumber);
+                                        if (this.countNumber == timer[2] && endText.value != "") txt.innerText = number + endText.value;
+                                    },
+                                    complete: function () {
+                                        let number = getNumber(this.countNumber);
+                                        if (endText.value != "") txt.innerText = number + endText.value;
+                                    },
                                 }
-                            }
-                        );
+                            );
                     }
-                }
+                };
                 animatedNumbers.on(CerosSDK.EVENTS.ANIMATION_STARTED, animationStartedCallback);
-            })
+            });
     });
 })();
-
-var clockFunction = (number,num, colon) => {
-    let secs = (number % 60);
-    if(secs < 10){
-        secs = "0" + (number % 60);
-    }
-    let mins = Math.floor(number/60);
-    if(mins < 10){
-        mins = "0" + Math.floor(number/60);
-    }
-    num = (mins + colon + secs).toString();
-    return num;
-}
+const conversionFactor = (rest) => (rest < 10 ? `0${rest}` : rest);
+const clockFunction = (count, n, c) => {
+    let secs = conversionFactor(Math.floor(count % 60));
+    let mins = conversionFactor(Math.floor(count / 60));
+    n = (mins + c + secs).toString();
+    return n;
+};
