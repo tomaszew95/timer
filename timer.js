@@ -67,7 +67,8 @@ var timerPlugin = document.getElementById("ceros-timer-plugin");
                         // checking if clock may require changing type of easing
                         if(clock){
                             let duration = parseInt(timer[0]/1000, 10)
-                            if(duration==timer[1] || duration==timer[2])
+                            let difference = Math.abs( parseInt(timer[1], 10) - parseInt(timer[2], 10) )
+                            if(duration==timer[1] || duration==timer[2] || duration==difference)
                                 easingTime = "linear"
                         }
 
